@@ -102,6 +102,17 @@ binheap* perf_func_binheap(binheap_scan_func func, int k,
 			event_values, repeat, events, event_count);
 }
 
+binheap* perf_func_binheap_display(binheap_scan_func func, int k, binheap* oracle_data,
+		const char* desc, int repeat, const char* events[],
+		int event_count) {
+	std::function<binheap*(binheap*, binheap*)> check_f;
+	check_f = binheap_oracle_check;
+	std::function<binheap*()> setup_f = [k] () {
+		return new binheap(k);
+	};
+	return perf_func_display(func, check_f, setup_f, oracle_data, desc, repeat, events, event_count);
+}
+
 void simple_time_display(function<void()> func, const char* desc, int repeat) {
 	std::function<void(void*)> f = [&func](void*) {
 		func();
