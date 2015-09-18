@@ -68,18 +68,6 @@ binheap* time_func_binheap(binheap_scan_func func, int k,
 
 void simple_time_display(function<void()> func, const char* desc, int repeat);
 
-struct perf_events {
-	std::uint64_t cycles;
-	std::uint64_t intructions;
-	std::uint64_t l1d_load;
-	std::uint64_t l1d_miss;
-	std::uint64_t time;
-};
-
-//static const char* events[] = { "cycles", "instructions", "MEM_LOAD_UOPS_RETIRED:L1_HIT",
-//		"MEM_LOAD_UOPS_RETIRED:L1_MISS"};
-//const int event_count = 4;
-
 template<typename T>
 void divide_array(T* array, int size, int divisor) {
 	for(int i = 0; i < size; ++i) {

@@ -89,6 +89,16 @@ binheap* time_func_binheap(binheap_scan_func func, int k,
 	return time_func(func, check_f, setup_f, oracle_data, time, repeat);
 }
 
+void simple_time_display(function<void()> func, const char* desc, int repeat) {
+	std::function<void(void*)> f = [&func](void*) {
+		func();
+	};
+	std::function<void*(void*, void*)> check_f = NULL;
+	std::function<void*()> setup_f = NULL;
+	void* null_ptr = NULL;
+	time_func_display(f, check_f, setup_f, null_ptr, desc, repeat);
+}
+
 binheap* perf_func_binheap(binheap_scan_func func, int k,
 		binheap* oracle_data,
 		std::uint64_t event_values[],
@@ -111,14 +121,4 @@ binheap* perf_func_binheap_display(binheap_scan_func func, int k, binheap* oracl
 		return new binheap(k);
 	};
 	return perf_func_display(func, check_f, setup_f, oracle_data, desc, repeat, events, event_count);
-}
-
-void simple_time_display(function<void()> func, const char* desc, int repeat) {
-	std::function<void(void*)> f = [&func](void*) {
-		func();
-	};
-	std::function<void*(void*, void*)> check_f = NULL;
-	std::function<void*()> setup_f = NULL;
-	void* null_ptr = NULL;
-	time_func_display(f, check_f, setup_f, null_ptr, desc, repeat);
 }
