@@ -9,14 +9,17 @@
 //
 
 
+#include <cstring>
 #include <functional>
 #include "config.h"
 #include "common.hpp"
 #include "populate.hpp"
 #include "benchmark.hpp"
+#include "scan_naive.hpp"
+#include "scan_sse.hpp"
 #include "scan_avx.hpp"
 #include "scan_gather.hpp"
-#include "scan_naive.hpp"
+
 
 #define NSQ 8
 #define BITSQ 8
