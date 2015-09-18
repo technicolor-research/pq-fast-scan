@@ -42,18 +42,18 @@ void display_csv(T array[], int size) {
 
 static const int repeat = 1;
 
-typedef todo_binheap* (*benchmark_csv_func)(binheap_scan_func func, int k,
-		todo_binheap* oracle_data);
+typedef binheap* (*benchmark_csv_func)(binheap_scan_func func, int k,
+		binheap* oracle_data);
 
 static const char* events[] = {"cycles", "instructions", "L1-dcache-loads"};
 const int event_count = 3;
 
 static const char* csv_header_perf = "pq_us,pq_cycles,pq_instructions,pq_l1_loads,fast_pq_us,fast_pq_cycles,fast_pq_instructions,fast_pq_l1_loads";
-todo_binheap* perf_func_csv(binheap_scan_func func, int k,
-		todo_binheap* oracle_data) {
+binheap* perf_func_csv(binheap_scan_func func, int k,
+		binheap* oracle_data) {
 	int total_event_count = event_count + 1;
 	std::uint64_t* event_values = new std::uint64_t[total_event_count];
-	todo_binheap* ret = perf_func_binheap(func, k, oracle_data, event_values, repeat,
+	binheap* ret = perf_func_binheap(func, k, oracle_data, event_values, repeat,
 			events, event_count);
 	display_csv(event_values, total_event_count);
 	delete[] event_values;
@@ -62,10 +62,10 @@ todo_binheap* perf_func_csv(binheap_scan_func func, int k,
 }
 
 static const char* csv_header_time = "pq_us,fast_pq_us";
-todo_binheap* time_func_csv(binheap_scan_func func, int bh_size,
-		todo_binheap* bh_oracle) {
+binheap* time_func_csv(binheap_scan_func func, int bh_size,
+		binheap* bh_oracle) {
 	unsigned long us_time;
-	todo_binheap* ret = time_func_binheap(func, bh_size, bh_oracle, repeat, us_time);
+	binheap* ret = time_func_binheap(func, bh_size, bh_oracle, repeat, us_time);
 	std::cout << us_time;
 	std::cout.flush();
 	return ret;
@@ -183,7 +183,7 @@ void process_query_vectors(cmdargs& args, partition& part, query_set& query) {
 
 		// Normal PQ Scan
 		pq_params pqp {8, 8};
-		todo_binheap* bh_oracle = nullptr;
+		binheap* bh_oracle = nullptr;
 		std::bind(pq_binheap_scan,
 				reinterpret_cast<const char*>(part.partition),
 				dist_table, part.n, pqp, _1);

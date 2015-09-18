@@ -14,7 +14,7 @@
 #include <string>
 #include <functional>
 #include "benchmark.hpp"
-#include "todo_binheap.hpp"
+#include "binheap.hpp"
 #include "config.h"
 
 using namespace std;
@@ -42,27 +42,23 @@ void exit_display_binheap_elems(int* oracle_labels, float* oracle_dists,
 	exitmsg("Aborting.");
 }
 
-void binheap_sort_clean(todo_binheap* bh, int*& labels_out, float*& dists_out) {
-	bh.todo_sort(labels_out, dists_out);
-}
-
-todo_binheap* binheap_oracle_check(todo_binheap* oracle_bh, todo_binheap* bh) {
+binheap* binheap_oracle_check(binheap* oracle_bh, binheap* bh) {
 	if (oracle_bh == NULL) {
 		return bh;
 	}
-	int* labels = new int[bh.todo_size()];
-	float* dists = new float[bh.todo_size()];
-	binheap_sort_clean(bh, labels, dists);
-	int* oracle_labels = new int[oracle_bh.todo_size()];
-	float* oracle_dists = new float[oracle_bh.todo_size()];
-	binheap_sort_clean(oracle_bh, oracle_labels, oracle_dists);
-	if (oracle_bh.todo_size() != bh.todo_size()) {
-		exit_display_binheap_elems(oracle_labels, oracle_dists, oracle_bh.todo_size(), labels, dists, bh.todo_size(), -1);
+	int* labels = new int[bh->size()];
+	float* dists = new float[bh->size()];
+	bh->sort(labels, dists);
+	int* oracle_labels = new int[oracle_bh->size()];
+	float* oracle_dists = new float[oracle_bh->size()];
+	oracle_bh->sort(oracle_labels, oracle_dists);
+	if (oracle_bh->size() != bh->size()) {
+		exit_display_binheap_elems(oracle_labels, oracle_dists, oracle_bh->size(), labels, dists, bh->size(), -1);
 	}
-	for (int i = 0; i < oracle_bh.todo_size(); ++i) {
+	for (int i = 0; i < oracle_bh->size(); ++i) {
 		if (abs(oracle_dists[i] - dists[i]) > 0.1) {
 			std::cout << abs(oracle_dists[i] - dists[i]) << std::endl;
-			exit_display_binheap_elems(oracle_labels, oracle_dists, oracle_bh.todo_size(), labels, dists, bh.todo_size(), i);
+			exit_display_binheap_elems(oracle_labels, oracle_dists, oracle_bh->size(), labels, dists, bh->size(), i);
 		}
 	}
 	delete[] oracle_labels;
@@ -73,34 +69,34 @@ todo_binheap* binheap_oracle_check(todo_binheap* oracle_bh, todo_binheap* bh) {
 	return oracle_bh;
 }
 
-todo_binheap* time_func_binheap_display(binheap_scan_func func,  int k, todo_binheap* oracle_data,
+binheap* time_func_binheap_display(binheap_scan_func func,  int k, binheap* oracle_data,
 		const char* desc, int repeat) {
-	std::function<todo_binheap*(todo_binheap*, todo_binheap*)> check_f;
+	std::function<binheap*(binheap*, binheap*)> check_f;
 	check_f = binheap_oracle_check;
-	std::function<todo_binheap*()> setup_f = [k] () {
-		return new todo_binheap(k);
+	std::function<binheap*()> setup_f = [k] () {
+		return new binheap(k);
 	};
 	return time_func_display(func, check_f, setup_f, oracle_data, desc, repeat);
 }
 
-todo_binheap* time_func_binheap(binheap_scan_func func, int k,
-		todo_binheap* oracle_data, int repeat, unsigned long& time) {
-	std::function<todo_binheap*(todo_binheap*, todo_binheap*)> check_f;
+binheap* time_func_binheap(binheap_scan_func func, int k,
+		binheap* oracle_data, int repeat, unsigned long& time) {
+	std::function<binheap*(binheap*, binheap*)> check_f;
 	check_f = binheap_oracle_check;
-	std::function<todo_binheap*()> setup_f = [k] () {
-		return new todo_binheap(k);
+	std::function<binheap*()> setup_f = [k] () {
+		return new binheap(k);
 	};
 	return time_func(func, check_f, setup_f, oracle_data, time, repeat);
 }
 
-todo_binheap* perf_func_binheap(binheap_scan_func func, int k,
-		todo_binheap* oracle_data,
+binheap* perf_func_binheap(binheap_scan_func func, int k,
+		binheap* oracle_data,
 		std::uint64_t event_values[],
 		int repeat, const char* events[], int event_count) {
-	std::function<todo_binheap*(todo_binheap*, todo_binheap*)> check_f;
+	std::function<binheap*(binheap*, binheap*)> check_f;
 	check_f = binheap_oracle_check;
-	std::function<todo_binheap*()> setup_f = [k] () {
-		return new todo_binheap(k);
+	std::function<binheap*()> setup_f = [k] () {
+		return new binheap(k);
 	};
 	return perf_func(func, check_f, setup_f, oracle_data,
 			event_values, repeat, events, event_count);

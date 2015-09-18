@@ -13,10 +13,10 @@
 #define SCAN_GATHER_HPP_
 
 #include "common.hpp"
-#include "todo_binheap.hpp"
+#include "binheap.hpp"
 
 void gather_check(const char* partition, const char* i32_partition, unsigned long n);
 void scan_bh_avx_gths(const char* partition, const float* dists, unsigned long n,
-		pq_params pqp, todo_binheap* bh);
+		pq_params pqp, binheap* bh);
 
 #endif /* SCAN_GATHER_HPP_ */

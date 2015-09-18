@@ -42,28 +42,28 @@ static inline std::int8_t Q127(const float x, const float min, const float max) 
 
 FORCE_INLINE
 static inline float begin_scan(const std::uint8_t* partition, const unsigned* labels, const float* dists,
-		unsigned long n, todo_binheap* bh) {
-	for(int pqcode_i = 0; pqcode_i < bh.todo_capacity(); ++pqcode_i) {
+		unsigned long n, binheap* bh) {
+	for(int pqcode_i = 0; pqcode_i < bh->capacity(); ++pqcode_i) {
 		float candidate = 0;
 		const std::uint8_t* const pqcode = partition + pqcode_i * NSQ;
 		for(int comp_i = 0; comp_i < NSQ; ++comp_i) {
 				candidate += dists[comp_i * NCENT + pqcode[comp_i]];
 		}
-		bh.todo_add(pqcode_i, candidate);
+		bh->push(pqcode_i, candidate);
 	}
-	float bh_max = bh.todo_peek();
-	for(unsigned pqcode_i = bh.todo_capacity(); pqcode_i < n; ++pqcode_i) {
+	float bh_max = bh->max();
+	for(unsigned pqcode_i = bh->capacity(); pqcode_i < n; ++pqcode_i) {
 		float candidate = 0;
 		const std::uint8_t* const pqcode = partition + pqcode_i * NSQ;
 		for(int comp_i = 0; comp_i < NSQ; ++comp_i) {
 				candidate += dists[comp_i * NCENT + pqcode[comp_i]];
 		}
 		if(candidate < bh_max) {
-			bh.todo_add(pqcode_i, candidate);
-			bh_max = bh.todo_peek();
+			bh->push(pqcode_i, candidate);
+			bh_max = bh->max();
 		}
 	}
-	return bh.todo_peek();
+	return bh->max();
 }
 
 FORCE_INLINE
@@ -226,7 +226,7 @@ const std::uint64_t masktable[] = { 0x0, 0x0, 0x1, 0x100, 0x2, 0x200, 0x201,
 FORCE_INLINE
 static inline void fast_scan_1(const std::uint8_t* partition, const unsigned* labels,
 		const float* dists, const __m128i (&min4)[4], __m128i (&ft4)[4][16],
-		const float qmin, const float qmax, todo_binheap* bh, unsigned scan_pqcode_count) {
+		const float qmin, const float qmax, binheap* bh, unsigned scan_pqcode_count) {
 	const unsigned simd_pqcode_count = 16;
 	const int comp_block_size = 16;
 	const unsigned simd_block_size = simd_pqcode_count * (4 * 1 + 4 * 0.5);
@@ -342,9 +342,9 @@ static inline void fast_scan_1(const std::uint8_t* partition, const unsigned* la
 						const float candidate = scan_pqcode_in_simd_block_1(pos,
 								partition, hdr->values, dists);
 						if (candidate < bh_bound) {
-							bh.todo_add(labels[scan_pqcode_count + pos],
+							bh->push(labels[scan_pqcode_count + pos],
 									candidate);
-							bh_bound = bh.todo_peek();
+							bh_bound = bh->max();
 							bh_bound_quant = _mm_set1_epi8(
 									Q127(bh_bound, qmin, qmax));
 						}
@@ -366,9 +366,9 @@ static inline void fast_scan_1(const std::uint8_t* partition, const unsigned* la
 						const float candidate = scan_pqcode_in_simd_block_1(pos,
 								partition, hdr->values, dists);
 						if (candidate < bh_bound) {
-							bh.todo_add(labels[scan_pqcode_count + pos],
+							bh->push(labels[scan_pqcode_count + pos],
 									candidate);
-							bh_bound = bh.todo_peek();
+							bh_bound = bh->max();
 							bh_bound_quant = _mm_set1_epi8(
 									Q127(bh_bound, qmin, qmax));
 						}
@@ -383,7 +383,7 @@ static inline void fast_scan_1(const std::uint8_t* partition, const unsigned* la
 }
 
 void scan_partition_1(const std::uint8_t* partition, const unsigned* labels,
-		const float* dists, todo_binheap* bh) {
+		const float* dists, binheap* bh) {
 	// 0. Scan first keep pqcodes
 	const std::uint32_t keep = *reinterpret_cast<const std::uint32_t*>(partition);
 	partition += sizeof(keep);

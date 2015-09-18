@@ -13,9 +13,9 @@
 #define SCAN_AVX_HPP_
 
 #include "common.hpp"
-#include "todo_binheap.hpp"
+#include "binheap.hpp"
 
 void scan_bh_prefetch_avx(const char* partition, const float* dists,
-		unsigned long n, pq_params pqp, todo_binheap* bh);
+		unsigned long n, pq_params pqp, binheap* bh);
 
 #endif /* SCAN_AVX_HPP_ */

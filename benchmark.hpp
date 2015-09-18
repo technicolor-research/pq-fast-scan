@@ -16,7 +16,7 @@
 #include <functional>
 #include "common.hpp"
 #include "perfevents.hpp"
-#include "todo_binheap.hpp"
+#include "binheap.hpp"
 #include "config.h"
 
 using namespace std;
@@ -58,13 +58,13 @@ T* time_func_display(std::function<void(T*)> bench_f, std::function<T*(T*, T*)> 
 	return out_data;
 }
 
-typedef std::function<void(todo_binheap*)> binheap_scan_func;
+typedef std::function<void(binheap*)> binheap_scan_func;
 
-todo_binheap* time_func_binheap_display(binheap_scan_func func,  int k, todo_binheap* oracle_data,
+binheap* time_func_binheap_display(binheap_scan_func func,  int k, binheap* oracle_data,
 		const char* desc, int repeat);
 
-todo_binheap* time_func_binheap(binheap_scan_func func, int k,
-		todo_binheap* oracle_data, int repeat, unsigned long& time);
+binheap* time_func_binheap(binheap_scan_func func, int k,
+		binheap* oracle_data, int repeat, unsigned long& time);
 
 void simple_time_display(function<void()> func, const char* desc, int repeat);
 
@@ -138,12 +138,12 @@ T* perf_func_display(std::function<void(T*)> bench_f, std::function<T*(T*, T*)> 
 	return out_data;
 }
 
-todo_binheap* perf_func_binheap(binheap_scan_func func, int k,
-		todo_binheap* oracle_data,
+binheap* perf_func_binheap(binheap_scan_func func, int k,
+		binheap* oracle_data,
 		std::uint64_t event_values[],
 		int repeat, const char* events[], int event_count);
 
-todo_binheap* perf_func_binheap_display(binheap_scan_func func, int k, todo_binheap* oracle_data,
+binheap* perf_func_binheap_display(binheap_scan_func func, int k, binheap* oracle_data,
 		const char* desc, int repeat, const char* events[],
 		int event_count);
 

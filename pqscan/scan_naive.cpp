@@ -19,12 +19,12 @@
 #define NCENT 256
 
 void scan_bh(const char* partition, const float* dists,
-		unsigned long n, pq_params pqp, todo_binheap* bh) {
+		unsigned long n, pq_params pqp, binheap* bh) {
 	long binheap_op = 0;
-	for (int t = 0; t < bh.todo_capacity(); ++t) {
-		bh.todo_add(0, FLT_MAX - t);
+	for (int t = 0; t < bh->capacity(); ++t) {
+		bh->push(0, FLT_MAX - t);
 	}
-	float min = bh.todo_peek();
+	float min = bh->max();
 	float candidate;
 	uint8_t* u8_buf = (uint8_t*) partition;
 	for (unsigned long i = 0; i < n; ++i) {
@@ -34,8 +34,8 @@ void scan_bh(const char* partition, const float* dists,
 			candidate += dists[j * NCENT + pqcode[j]];
 		}
 		if (candidate < min) {
-			bh.todo_add(i, candidate);
-			min = bh.todo_peek();
+			bh->push(i, candidate);
+			min = bh->max();
 			binheap_op++;
 		}
 	}

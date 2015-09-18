@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
 	//
 	const int k = 10;
-	todo_binheap* oracle = NULL;
+	binheap* oracle = NULL;
 
 	// Naive Scan
 	oracle = bench_f(bind(scan_bh, partition, dists, n, pqp, _1), k, oracle,

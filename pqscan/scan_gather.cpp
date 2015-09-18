@@ -21,11 +21,11 @@
 #define AVX_SZ 8
 
 void scan_bh_avx_gths(const char* partition, const float* dists, unsigned long n,
-		pq_params pqp, todo_binheap* bh) {
-	for (int t = 0; t < bh.todo_capacity(); ++t) {
-		bh.todo_add(0, FLT_MAX - t);
+		pq_params pqp, binheap* bh) {
+	for (int t = 0; t < bh->capacity(); ++t) {
+		bh->push(0, FLT_MAX - t);
 	}
-	float minb = bh.todo_peek();
+	float minb = bh->max();
 	__m256 min = _mm256_set1_ps(minb);
 	float mcandidates[AVX_SZ];
 	const __m256i mask_firstbyte = _mm256_set1_epi32(0xFF);
@@ -62,8 +62,8 @@ void scan_bh_avx_gths(const char* partition, const float* dists, unsigned long n
 				for(unsigned ii = 0; ii < AVX_SZ; ++ii) {
 					if(mcandidates[ii] < minb) {
 						const int index=(i*32)+(ii*4)+s;
-						bh.todo_add(index, mcandidates[ii]);
-						minb = bh.todo_peek();
+						bh->push(index, mcandidates[ii]);
+						minb = bh->max();
 					}
 				}
 				min = _mm256_set1_ps(minb);

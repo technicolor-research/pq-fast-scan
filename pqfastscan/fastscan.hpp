@@ -20,6 +20,6 @@ namespace Counters {
 };
 
 void scan_partition_1(const std::uint8_t* partition, const unsigned* labels,
-		const float* dists, todo_binheap* bh);
+		const float* dists, binheap* bh);
 
 #endif /* FASTSCAN_HPP_ */

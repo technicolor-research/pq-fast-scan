@@ -19,12 +19,12 @@
 #define SSE_SZ 4
 
 void scan_prefetch_sse(const char* partition, const float* dists,
-		unsigned long n, pq_params pqp, todo_binheap* bh) {
+		unsigned long n, pq_params pqp, binheap* bh) {
 	long binheap_op = 0;
-	for (int t = 0; t < bh.todo_capacity(); ++t) {
-		bh.todo_add(0, FLT_MAX - t);
+	for (int t = 0; t < bh->capacity(); ++t) {
+		bh->push(0, FLT_MAX - t);
 	}
-	float minb = bh.todo_peek();
+	float minb = bh->max();
 	__m128 min = _mm_set1_ps(minb);
 	float mcandidates[SSE_SZ];
 	__m128 partial;
@@ -56,8 +56,8 @@ void scan_prefetch_sse(const char* partition, const float* dists,
 				_mm_store_ps(mcandidates, candidates);
 				for(unsigned ii = 0; ii < SSE_SZ; ++ii) {
 					if(mcandidates[ii] < minb) {
-						bh.todo_add(i+ii, mcandidates[ii]);
-						minb = bh.todo_peek();
+						bh->push(i+ii, mcandidates[ii]);
+						minb = bh->max();
 						binheap_op++;
 					}
 				}
