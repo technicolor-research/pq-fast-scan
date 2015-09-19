@@ -42,7 +42,7 @@ configure_file("${PROJECT_SOURCE_DIR}/config.h.in"
 include_directories("${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}")
 
 # Libraries
-set(LINK_LIBS rt pfm)
+set(LINK_LIBS pfm)
 
 # Object files
 add_library(common OBJECT common.cpp)
