@@ -332,7 +332,8 @@ void load_query_vectors(cmdargs& args,
 	}
 }
 
-void process_query_vectors(cmdargs& args, partition& part, query_set& query) {
+void process_query_vectors(cmdargs& args, partition_data& part,
+		query_set& query) {
 	int distance_table_size = NCENT * NSQ;
 	int query_n = query.vectors.size() / query.dimension;
 
@@ -342,18 +343,19 @@ void process_query_vectors(cmdargs& args, partition& part, query_set& query) {
 	std::cout << "fast_pq_scanned,quant_bound" << std::endl;
 
 	// Process query vectors
-	for(int i = 0; i < query_n; ++i) {
-		float* dist_table = query.distance_tables.data() + i * distance_table_size;
+	for (int i = 0; i < query_n; ++i) {
+		float* dist_table = query.distance_tables.data()
+				+ i * distance_table_size;
 		// "Global" counters
 		Counters::total_scan = 0;
 		Counters::quant_bound = 0;
 
 		//
-		std::cout << query.ids[i] << "," << part.id << "," << part.n << "," <<
-				args.bh_size << "," << part.keep << ",";
+		std::cout << query.ids[i] << "," << part.id << "," << part.n << ","
+				<< args.bh_size << "," << part.keep << ",";
 
 		// Normal PQ Scan
-		pq_params pqp {8, 8};
+		pq_params pqp { 8, 8 };
 		binheap* bh_oracle = nullptr;
 		bh_oracle = args.bench_func(
 				std::bind(scan_bh,
@@ -366,7 +368,8 @@ void process_query_vectors(cmdargs& args, partition& part, query_set& query) {
 						part.permuted_labels.get(), dist_table, _1),
 				args.bh_size, bh_oracle);
 
-		std::cout <<  "," << Counters::total_scan << "," << Counters::quant_bound << std::endl;
+		std::cout << "," << Counters::total_scan << "," << Counters::quant_bound
+				<< std::endl;
 	}
 }
 
