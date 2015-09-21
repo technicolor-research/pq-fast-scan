@@ -69,3 +69,14 @@ add_executable(pqscan
     $<TARGET_OBJECTS:binheap>
     $<TARGET_OBJECTS:benchmark>)
 target_link_libraries(pqscan ${LINK_LIBS})
+
+# Target: pqfastcan - PQ Fast Scan - Real data
+add_executable(pqfastscan
+    pqfastscan/pqfastscan.cpp
+    pqfastscan/fastscan.cpp
+    pqfastscan/layout.cpp
+    $<TARGET_OBJECTS:scan_naive>
+    $<TARGET_OBJECTS:common>
+    $<TARGET_OBJECTS:binheap>
+    $<TARGET_OBJECTS:benchmark>)
+target_link_libraries(pqfastscan ${LINK_LIBS})
