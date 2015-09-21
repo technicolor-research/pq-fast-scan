@@ -86,7 +86,33 @@ struct cmdargs {
 };
 
 void usage(const char* progname) {
-	std::cout << progname << ": [-k keep] [-b binheap_size] partition query_set query_ids" << std::endl;
+	std::cerr << "Usage: " << progname << " [-p] [-k keep_ratio] [-b binheap_size]\n";
+	std::cerr << "       " << std::string(std::strlen(progname), ' ') << " partition_file query_file tables_file ids_file\n";
+	std::cerr << std::endl;
+	std::cerr << "Benchmark PQ Fast Scan against PQ Scan and output results as CSV\n";
+	std::cerr << std::endl;
+	std::cerr << "Positional arguments:\n";
+	std::cerr << "  partition_file\t Partition to scan (raw pqcodes)\n";
+	std::cerr << "  query_file\t\t Full set of query vectors (.bvecs file format)\n";
+	std::cerr << "  tables_file\t\t Full set of distance tables (.fvecs file\n";
+	std::cerr << "  \t\t\t format)\n";
+	std::cerr << "  ids_file\t\t IDs of vectors to load from query_file (plain\n";
+	std::cerr << "  \t\t\t text, one ID per line)\n";
+	std::cerr << std::endl;
+	std::cerr << "Examples:\n";
+	std::cerr << "  " << progname << " 100M1-partition-2.dat bigann_query.bvecs \\\n";
+	std::cerr << "  \t bigann_distance_tables.fvecs 100M1-list-2.txt\n\n";
+	std::cerr << "  " << progname << " -p -k 0.01 -b 200 100M1-partition-2.dat \\\n";
+	std::cerr << "  \t bigann_query.bvecs bigann_distance_tables.fvecs 100M1-list-2.txt\n";
+	std::cerr << std::endl;
+	std::cerr << "Options:\n";
+	std::cerr << "  -p\t\t\t Output performance counters (cycles,\n";
+	std::cerr << "  \t\t\t intructions, L1-dcache-loads) in addition to\n";
+	std::cerr << "  \t\t\t run times\n";
+	std::cerr << "  -k keep_ratio\t\t Scan keep_ratio vectors to determine qmax\n";
+	std::cerr << "  \t\t\t quantization bound (default: 0.005, i.e., 0.5%)\n";
+	std::cerr << "  -b binheap_size\t Allocate binary heap of size binheap_size to\n";
+	std::cerr << "  \t\t\t store nearest neighbors (default: 100)\n";
 	std::exit(1);
 }
 
@@ -96,7 +122,7 @@ void parse_args(cmdargs& args, int argc, char* argv[]) {
 	args.bh_size = 100;
 	args.bench_header = csv_header_time;
 	args.bench_func = &time_func_csv;
-	while ((opt = getopt(argc, argv, "k:b:p")) != -1) {
+	while ((opt = getopt(argc, argv, "k:b:ph")) != -1) {
 		switch (opt) {
 		case 'k':
 			args.keep_percent = std::atof(optarg);
