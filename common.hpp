@@ -12,8 +12,10 @@
 #ifndef COMMON_HPP_
 #define COMMON_HPP_
 
+#include <cstdlib>
 #include <cmath>
 #include <cstdint>
+#include <cassert>
 #include <iostream>
 #include <immintrin.h>
 
@@ -30,6 +32,13 @@ struct pq_params {
 	int nsq;		// Number of sub-quantizers
 	int bitsq;		// Bits per sub-quantizer
 };
+
+#define ALIGN_BYTES 4096
+inline void checked_aligned_alloc(void** buf, unsigned long sz) {
+	int err = posix_memalign((void**) buf, ALIGN_BYTES, sz);
+	assert(err == 0);
+}
+;
 
 inline void cprint(const char* str, color c) {
 	cout << colors[c] << str << colors[txtrst];

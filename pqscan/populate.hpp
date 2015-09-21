@@ -12,18 +12,11 @@
 #ifndef POPULATE_HPP_
 #define POPULATE_HPP_
 
-#include <cassert>
 #include <cstdlib>
 #include "common.hpp"
 #include <queue>
 
-#define ALIGN_BYTES 4096
 
-inline void checked_aligned_alloc(void** buf, unsigned long sz) {
-	int err = posix_memalign((void**) buf, ALIGN_BYTES, sz);
-	assert(err == 0);
-}
-;
 
 // Allocate a new PQ partition comprising n pqcodes
 char* partition_new(unsigned long n, const pq_params& pqp);

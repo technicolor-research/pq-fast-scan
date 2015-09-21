@@ -18,7 +18,6 @@
 #include <memory>
 #include <iostream>
 #include "common.hpp"
-#include "populate.hpp"
 
 /* Bits copy functions		*/
 

@@ -19,7 +19,6 @@
 #include <immintrin.h>
 #include <x86intrin.h>
 
-#include "populate.hpp"
 #include "benchmark.hpp"
 #include "layout.hpp"
 
