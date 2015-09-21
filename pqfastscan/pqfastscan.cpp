@@ -10,6 +10,7 @@
 
 
 #include <cstdlib>
+#include <cstring>
 #include <cstdarg>
 #include <iostream>
 #include <fstream>
@@ -77,6 +78,7 @@ struct cmdargs {
 	unsigned bh_size;
 	const char* partition_file;
 	const char* query_set_file;
+	const char* distance_tables_file;
 	const char* query_id_file;
 	//
 	benchmark_csv_func bench_func;
@@ -110,60 +112,203 @@ void parse_args(cmdargs& args, int argc, char* argv[]) {
 			usage(argv[0]);
 		}
 	}
-	if(argc - optind < 3) {
+	if(argc - optind < 4) {
 		usage(argv[0]);
 	}
 	args.partition_file = argv[optind];
 	args.query_set_file = argv[optind + 1];
-	args.query_id_file = argv[optind + 2];
+	args.distance_tables_file = argv[optind + 2];
+	args.query_id_file = argv[optind + 3];
 }
 
-struct partition {
+struct partition_data {
 	unique_buffer<std::uint8_t> laidout_partition;
 	std::unique_ptr<unsigned[]> permuted_labels;
-	std::uint8_t* partition;
+	std::unique_ptr<std::uint8_t[]> partition;
 	int id;
 	unsigned long n;
 	unsigned keep;
 };
 
+void check_fstream(const std::ifstream& file, const char* filename) {
+	if (!file) {
+		std::cerr << "Could not open " << filename << std::endl;
+	}
+}
+
+int parse_number_before_extension(const char* filename) {
+    filename = basename(filename);
+    const char* rstart = std::strrchr(filename, '.');
+    if(rstart == nullptr) {
+        rstart = filename + std::strlen(filename) - 1;
+    }
+    // Iterate backwards until we find a number
+    while(*rstart < '0' || *rstart > '9') {
+        if(rstart == filename) {
+            return -1;
+        }
+        rstart--;
+    }
+    // Iterate backwards until beginning of number
+    while(rstart != filename
+            && *(rstart -1 ) >= '0' && *(rstart -1) <= '9') {
+        rstart--;
+    }
+    // Parse number
+    return static_cast<int>(std::strtoull(rstart, nullptr, 10));
+}
+
+void print_positive_number(int num) {
+	if(num < 0) {
+		std::cout << '?';
+	} else {
+		std::cout << num;
+	}
+}
+void check_same_id(cmdargs& args, int& partition_id) {
+	partition_id = parse_number_before_extension(args.partition_file);
+	int list_id = parse_number_before_extension(args.query_id_file);
+	if(partition_id != list_id || partition_id == -1) {
+		std::cerr << "Inconsistent partition_file and ids_file." << std::endl;
+		std::cerr << "  partition_file: " << args.partition_file << " (last number=";
+		print_positive_number(partition_id);
+		std::cerr << ")" << std::endl;
+		std::cerr << "  ids_file: " << args.query_id_file << " (last number=";
+		print_positive_number(list_id);
+		std::cerr << ")\n" << std::endl;
+		std::cerr << "partition_file and ids_file MUST have the same last number." << std::endl;
+		std::exit(1);
+	}
+}
+
+void load_partition(cmdargs& args, partition_data& part) {
+	// Check partition filename and query vectors ids filenames
+	check_same_id(args, part.id);
+
+	// Read original partition for PQ Scan
+	std::ifstream infile(args.partition_file, std::ifstream::binary);
+	check_fstream(infile, args.partition_file);
+	std::int32_t pqcodes_count;
+	infile.read(reinterpret_cast<char*>(&pqcodes_count), sizeof(pqcodes_count));
+	part.n = pqcodes_count;
+	part.partition.reset(new std::uint8_t[part.n * NSQ]);
+	infile.read(
+			reinterpret_cast<char*>(part.partition.get()), part.n * NSQ);
+
+	// Layout partition for PQ Fast Scan
+	pq_params pqp {8, 8};
+	part.permuted_labels = perms_alloc(part.n);
+	unsigned* labels = part.permuted_labels.get();
+	part.keep = (unsigned) part.n * args.keep_percent;
+	part.laidout_partition = layout_partition(part.partition.get(), part.n,
+			labels, pqp, group_inter_s1, part.keep);
+}
+
 struct query_set {
 	std::vector<float> vectors;
 	std::vector<unsigned> ids;
 	std::vector<float> distance_tables;
-	int dim;
+	int dimension;
 };
+
+template<typename T>
+std::unique_ptr<T[]> read_vectors(const char* filename, long& number_vector,
+		int& dimension) {
+	long read_vectors = 0;
+	std::ifstream infile(filename, std::ifstream::binary);
+	check_fstream(infile, filename);
+
+	// Read first dimension
+	std::int32_t read_dimension;
+	infile.read(reinterpret_cast<char*>(&read_dimension),
+			sizeof(read_dimension));
+	dimension = static_cast<int>(read_dimension);
+
+	// Compute number of vectors in file
+	infile.seekg(0, std::ifstream::end);
+	number_vector = infile.tellg()
+			/ (dimension * sizeof(T) + sizeof(read_dimension));
+	infile.seekg(0, std::ifstream::beg);
+
+	// Allocate buffer
+	std::unique_ptr<T[]> vectors(new T[number_vector * dimension]);
+
+	// Read all vectors
+	while (read_vectors != number_vector) {
+		// Read dimension
+		infile.read(reinterpret_cast<char*>(&read_dimension),
+				sizeof(read_dimension));
+		// Check all dimensions are the same
+		if (static_cast<int>(read_dimension) != dimension) {
+			std::cerr << "Error while reading vectors from " << filename << "."
+					<< std::endl;
+			std::cerr << "Vector " << number_vector << " has " << read_dimension
+					<< " dimensions while other vectors have " << dimension
+					<< " dimensions" << std::endl;
+			std::cerr << "All vectors must have the same number of "
+					<< "dimensions" << std::endl;
+			std::exit(1);
+		}
+		// Read vector data
+		infile.read(
+				reinterpret_cast<char*>(vectors.get() + read_vectors * dimension),
+				sizeof(T) * dimension);
+		read_vectors++;
+	}
+	return vectors;
+}
 
 void load_query_vectors(cmdargs& args,
 		query_set& query) {
 
 	// Load query vectors set
-	long query_vecs_count;
-	float* query_byte_vectors = todo_read_byte_vectors(args.query_set_file, &query_vecs_count, &query.dim);
-	std::cerr << query.dim << " " << query_vecs_count << std::endl;
+	long query_vectors_count;
+	std::unique_ptr<char[]> query_vectors = read_vectors<char>(
+			args.query_set_file, query_vectors_count, query.dimension);
+	std::cerr << query.dimension << " " << query_vectors_count << std::endl;
 
 	// Load distance tables
-	query.distance_tables = todo_load_distance_tables();
+	long distance_tables_count;
+	int tables_dimension;
+	std::unique_ptr<float[]> distance_tables = read_vectors<float>(
+			args.distance_tables_file, distance_tables_count, tables_dimension);
 
-	// Copy selected vectors
+	// Checks
+	if(distance_tables_count != query_vectors_count) {
+		std::cerr << "Found " << distance_tables_count << " distance tables in "
+				<< args.distance_tables_file << std::endl;
+		std::cerr << "Found " << query_vectors_count << " query vectors in "
+				<< args.query_set_file << std::endl;
+		std::cerr << "There must be as many distance tables as query vectors." << std::endl;
+		std::exit(1);
+	}
+	if(tables_dimension != 2048) {
+		std::cerr << "Invalid distance tables file" << std::endl;
+		std::exit(1);
+	}
+
+	// Copy selected vectors and distance tables
 	std::ifstream query_ids(args.query_id_file);
 	int id;
 	while (query_ids >> id) {
-		if (id < 0 || id >= query_vecs_count) {
+		if (id < 0 || id >= query_vectors_count) {
 			std::cerr << "Query ids must be comprised between 0 and "
-					<< query_vecs_count << std::endl;
+					<< query_vectors_count << std::endl;
 			std::exit(1);
 		}
-		query.vectors.insert(query.vectors.end(), query_byte_vectors + id * query.dim,
-				query_byte_vectors + (id + 1) * query.dim);
-		query.vectors.push_back(id);
+		query.vectors.insert(query.vectors.end(),
+				query_vectors.get() + id * query.dimension,
+				query_vectors.get() + (id + 1) * query.dimension);
+		query.distance_tables.insert(query.distance_tables.end(),
+				distance_tables.get() + id * tables_dimension,
+				distance_tables.get() + (id + 1) * tables_dimension);
+		query.ids.push_back(id);
 	}
-	free(query_byte_vectors);
 }
 
 void process_query_vectors(cmdargs& args, partition& part, query_set& query) {
 	int distance_table_size = NCENT * NSQ;
-	int query_n = query.vectors.size() / query.dim;
+	int query_n = query.vectors.size() / query.dimension;
 
 	// Display header
 	std::cout << "vec_id,partition_id,partition_n,bh_size,keep,";
@@ -184,13 +329,10 @@ void process_query_vectors(cmdargs& args, partition& part, query_set& query) {
 		// Normal PQ Scan
 		pq_params pqp {8, 8};
 		binheap* bh_oracle = nullptr;
-		std::bind(pq_binheap_scan,
-				reinterpret_cast<const char*>(part.partition),
-				dist_table, part.n, pqp, _1);
 		bh_oracle = args.bench_func(
 				std::bind(scan_bh,
-							reinterpret_cast<const char*>(part.partition),
-							dist_table, part.n, pqp, _1), args.bh_size, bh_oracle);
+						reinterpret_cast<const char*>(part.partition.get()),
+						dist_table, part.n, pqp, _1), args.bh_size, bh_oracle);
 		std::cout << ",";
 		// Fast PQ Scan
 		args.bench_func(
@@ -207,13 +349,12 @@ int main(int argc, char* argv[]) {
 	cmdargs args;
 	parse_args(args, argc, argv);
 	// Load partition
-	partition& part;
-	todo_load_partition(args, part);
-	std::cerr << "Loaded partition"<< std::endl ;
+	partition_data part;
+	load_partition(args, part);
+	std::cerr << "Loaded partition" << std::endl ;
 	// Load query vectors
-	query_set& query;
+	query_set query;
 	load_query_vectors(args, query);
-	std::cerr << "Loaded " << query.vectors.size() << " query vectors" << std::endl;
+	std::cerr << "Loaded " << query.vectors.size() / query.dimension << " query vectors" << std::endl;
 	process_query_vectors(args, part, query);
-	free(ivf);
 }
