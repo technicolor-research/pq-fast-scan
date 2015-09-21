@@ -118,7 +118,7 @@ void usage(const char* progname) {
 
 void parse_args(cmdargs& args, int argc, char* argv[]) {
 	int opt;
-	args.keep_percent = 0.01;
+	args.keep_percent = 0.005;
 	args.bh_size = 100;
 	args.bench_header = csv_header_time;
 	args.bench_func = &time_func_csv;
