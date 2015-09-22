@@ -196,12 +196,12 @@ Once you have an implementation of product quantization, you can generate
     [k-means variant which forces groups of same sizes](http://elki.dbs.ifi.lmu.de/wiki/Tutorial/SameSizeKMeans).
 4. Add all vectors of ANN_SIFT100M1 to the IVFADC.
 5. We name *partition* each Voronoi cell of the coarse quantizer. Save each 
-partition [0-7] to a different file. See below for storage format.
+partition [0-7] to a different file. See below for file format.
 6. Using the coarse quantizer, map each query vector to its corresponding
 partition (no multiple assignement, i.e. ma=1). Save the query vectors IDs 
-corresponding to each partition in a different *list*. See below for storage format.
+corresponding to each partition in a different *list*. See below for file format.
 7. Compute distance tables for each vector. Save *distance tables* sequentially
-in a single file. See below for storage format.
+in a single file. See below for file format.
 
 **partitions file format:** [Binary file]  
 The number of pqcodes in the partition (32-bit int), followed by all pqcodes of 
@@ -212,7 +212,7 @@ number.
 **distance tables file format:**    [Binary file]  
 Each query vector has 8 distance tables of 256 floats associated with it.
 The 8 distance tables of each query vector are stored as a vector of 2048
-floats (8 x 256). These vectors of 2048 floats are stored as an
+floats (8 x 256 floats). These vectors of 2048 floats are stored as an
 [fvecs file](http://corpus-texmex.irisa.fr/).  
 *Filename:* No restrictions.
 
