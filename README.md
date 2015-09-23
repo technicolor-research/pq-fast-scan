@@ -2,10 +2,32 @@
 
 ## Description ##
 
-The PQ Fast Scan (Product Quantization Fast Scan) project is an implementation 
-of fast vector scanning techniques for ANN search in large databases.
+The PQ Fast Scan project is a C++11 implementation of fast vector scanning 
+techniques for nearest neighbor search in large databases of high-dimensional
+vectors.
 
-Contact:  
+PQ Fast Scan builds on Product Quantization (PQ), a widely used solution for 
+nearest neighbor search. To find the nearest neighbor of a query vector, PQ 
+computes the distance between the query vector and databases vectors using 
+*lookup tables* (stored in the L1 cache). Thus, PQ Fast Scan performs many cache 
+accesses, which limit its performance. L1 cache accesses do not parallelize well 
+(maximum 2 concurrent accesses) and have a high latency (about 4 cycles). To 
+avoid these issues, PQ Fast Scan uses lookup tables stored in SIMD registers, 
+which can be queried in parallel (16 concurrent accesses) and with a low latency 
+(1 cycle).
+
+<p align="center">
+    <img src="https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/pq-fast-scan-overview.png">
+</p>
+
+This novel approach allows PQ Fast Scan to perform 4-6x faster than PQ Scan, 
+while returning the exact same results.
+
+<p align="center">
+    <img src="https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/pq-fast-scan-performance.png">
+</p>
+
+**Contact:**  
 Nicolas Le Souarnec: nicolas.le-scouarnec technicolor.com  
 Fabien André: fabien.andre technicolor.com  
 Please replace the space by an at sign.
