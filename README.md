@@ -8,13 +8,13 @@ vectors.
 
 PQ Fast Scan builds on Product Quantization (PQ), a widely used solution for 
 nearest neighbor search. To find the nearest neighbor of a query vector, PQ 
-computes the distance between the query vector and databases vectors using 
-*lookup tables* (stored in the L1 cache). Thus, PQ Fast Scan performs many cache 
-accesses, which limit its performance. L1 cache accesses do not parallelize well 
-(maximum 2 concurrent accesses) and have a high latency (about 4 cycles). To 
-avoid these issues, PQ Fast Scan uses lookup tables stored in SIMD registers, 
-which can be queried in parallel (16 concurrent accesses) and with a low latency 
-(1 cycle).
+computes the distance between the query vector and database vectors using 
+*lookup tables* stored in the *L1 cache*. This procedure, named *PQ Scan*, 
+performs many cache accesses, which limit its performance. L1 cache accesses do 
+not parallelize well (maximum 2 concurrent accesses) and have a high latency 
+(about 4 cycles). To avoid these issues, *PQ Fast Scan* uses lookup tables 
+stored in *SIMD registers*, which can be queried in parallel (16 concurrent 
+accesses) and with a low latency (1 cycle).
 
 <p align="center">
     <img src="https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/pq-fast-scan-overview.png">
