@@ -136,12 +136,14 @@ of IDs of query vectors, a set of *query vectors* and a set of *distance*
 
 We provide the following input files:
 
-* *partitions* and *lists*: `100M1-8-partitions.tar.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz) [Link 2](http://assets.xion345.info/datasets/100M1-8-partitions.tar.xz)
+* *partitions* and *lists*: `100M1-8-partitions.tar.xz`
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz) [Link 2](http://assets.xion345.info/datasets/100M1-8-partitions.tar.xz)  
+    `SHA256: ef7db5883a4fb80eb9163295b8326d5088915f8b9748912ccb5c2ff755d9801e`
 * *query vectors*: `bigann_query.bvecs.gz`  
     [Corpus Texmex](http://corpus-texmex.irisa.fr/), download *ANN_SIFT1B Query Set*
-* *distance tables*: `bigann_distance_tables.fvecs.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz) [Link 2](http://assets.xion345.info/datasets/bigann_distance_tables.fvecs.xz)
+* *distance tables*: `bigann_distance_tables.fvecs.xz`
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz) [Link 2](http://assets.xion345.info/datasets/bigann_distance_tables.fvecs.xz)  
+    `SHA256: 3c4c766c7092dbd5c7251b5c1bec934a0759b7b0c7ba6694735b7fbc76060e63`
 
 For more information about these datasets, see the Datasets section.
 
@@ -187,11 +189,13 @@ For more information about pqfastscan options, see `./pqfastscan -h`.
 
 To test pqfastscan, we provide:
 
-* *partitions* and *lists*: `100M1-8-partitions.tar.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz) [Link 2](http://assets.xion345.info/datasets/100M1-8-partitions.tar.xz)
-* *distance tables*: `bigann_distance_tables.fvecs.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz) [Link 2](http://assets.xion345.info/datasets/bigann_distance_tables.fvecs.xz)
-    
+* *partitions* and *lists*: `100M1-8-partitions.tar.xz`
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz) [Link 2](http://assets.xion345.info/datasets/100M1-8-partitions.tar.xz)  
+    `SHA256: ef7db5883a4fb80eb9163295b8326d5088915f8b9748912ccb5c2ff755d9801e`
+* *distance tables*: `bigann_distance_tables.fvecs.xz`
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz) [Link 2](http://assets.xion345.info/datasets/bigann_distance_tables.fvecs.xz)  
+    `SHA256: 3c4c766c7092dbd5c7251b5c1bec934a0759b7b0c7ba6694735b7fbc76060e63`
+
 Besides, we use the query set from the well-known ANN_SIFT1B dataset;
 
 * *query vectors*: `bigann_query.bvecs.gz`  
