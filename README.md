@@ -17,14 +17,14 @@ stored in *SIMD registers*, which can be queried in parallel (16 concurrent
 accesses) and with a low latency (1 cycle).
 
 <p align="center">
-    <img src="https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/pq-fast-scan-overview.png">
+    <img src="https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/pq-fast-scan-overview.png">
 </p>
 
 This novel approach allows PQ Fast Scan to perform 4-6x faster than PQ Scan, 
 while returning the exact same results.
 
 <p align="center">
-    <img src="https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/pq-fast-scan-performance.png">
+    <img src="https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/pq-fast-scan-performance.png">
 </p>
 
 **Contact:**  
@@ -137,11 +137,11 @@ of IDs of query vectors, a set of *query vectors* and a set of *distance*
 We provide the following input files:
 
 * *partitions* and *lists*: `100M1-8-partitions.tar.xz`  
-    [Link 1](https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/100M1-8-partitions.tar.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz)
 * *query vectors*: `bigann_query.bvecs.gz`  
     [Corpus Texmex](http://corpus-texmex.irisa.fr/), download *ANN_SIFT1B Query Set*
 * *distance tables*: `bigann_distance_tables.fvecs.xz`  
-    [Link 1](https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/bigann_distance_tables.fvecs.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz)
 
 For more information about these datasets, see the Datasets section.
 
@@ -188,9 +188,9 @@ For more information about pqfastscan options, see `./pqfastscan -h`.
 To test pqfastscan, we provide:
 
 * *partitions* and *lists*: `100M1-8-partitions.tar.xz`  
-    [Link 1](https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/100M1-8-partitions.tar.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz)
 * *distance tables*: `bigann_distance_tables.fvecs.xz`  
-    [Link 1](https://storage.sbg-1.runabove.io/v1/AUTH_9e87f0768a594dfe984fbd556ac7792b/pq-fast-scan/bigann_distance_tables.fvecs.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz)
     
 Besides, we use the query set from the well-known ANN_SIFT1B dataset;
 
