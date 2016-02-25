@@ -137,11 +137,11 @@ of IDs of query vectors, a set of *query vectors* and a set of *distance*
 We provide the following input files:
 
 * *partitions* and *lists*: `100M1-8-partitions.tar.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz) [Link 2](http://assets.xion345.info/datasets/100M1-8-partitions.tar.xz)
 * *query vectors*: `bigann_query.bvecs.gz`  
     [Corpus Texmex](http://corpus-texmex.irisa.fr/), download *ANN_SIFT1B Query Set*
 * *distance tables*: `bigann_distance_tables.fvecs.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz) [Link 2](http://assets.xion345.info/datasets/bigann_distance_tables.fvecs.xz)
 
 For more information about these datasets, see the Datasets section.
 
@@ -188,9 +188,9 @@ For more information about pqfastscan options, see `./pqfastscan -h`.
 To test pqfastscan, we provide:
 
 * *partitions* and *lists*: `100M1-8-partitions.tar.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/100M1-8-partitions.tar.xz) [Link 2](http://assets.xion345.info/datasets/100M1-8-partitions.tar.xz)
 * *distance tables*: `bigann_distance_tables.fvecs.xz`  
-    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz)
+    [Link 1](https://storage.sbg1.cloud.ovh.net/v1/AUTH_cb25a15f19bd41a5b3bdd2b60b718b72/pq-fast-scan/bigann_distance_tables.fvecs.xz) [Link 2](http://assets.xion345.info/datasets/bigann_distance_tables.fvecs.xz)
     
 Besides, we use the query set from the well-known ANN_SIFT1B dataset;
 
