@@ -32,7 +32,7 @@ Nicolas Le Souarnec: nicolas.le-scouarnec technicolor.com
 Fabien André: fabien.andre technicolor.com  
 Please replace the space by an at sign.
 
-## Publication ##
+## Publication ##
 
 F. Andre, A.-M. Kermarrec, and N. Le Scouarnec. [Cache locality is not enough: High-Performance Nearest Neighbor Search with Product Quantization
 Fast Scan](http://www.vldb.org/pvldb/vol9/p288-andre.pdf). *[PVLDB](http://www.vldb.org/pvldb/vol9.html)*, 9(4), 2015
