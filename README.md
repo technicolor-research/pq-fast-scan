@@ -34,8 +34,8 @@ Please replace the space by an at sign.
 
 ## Publication ##
 
-F. Andre, A.-M. Kermarrec, and N. Le Scouarnec. [Cache locality is not enough: High-Performance Nearest Neighbor Search with Product Quantization
-Fast Scan](http://www.vldb.org/pvldb/vol9/p288-andre.pdf). *[PVLDB](http://www.vldb.org/pvldb/vol9.html)*, 9(4), 2015
+F. Andre, A.-M. Kermarrec, and N. Le Scouarnec. [Cache locality is not enough: High-Performance Nearest Neighbor Search with Product Quantization.](http://www.vldb.org/pvldb/vol9/p288-andre.pdf) *[PVLDB](http://www.vldb.org/pvldb/vol9.html)*, 9(4), 2015  
+Publication presented at VLDB'16: [Slides](http://assets.xion345.info/vldb16/slides.pdf), [Poster](http://assets.xion345.info/vldb16/poster.pdf)
 
 ## License ##
 
