@@ -253,3 +253,7 @@ One vector ID per line.
 number. If the vector ID 42 is in the file xxxx-list-6.txt, it means that the
 vector number 42 from the query set was mapped to the partition 6 by the coarse
 quantizer.
+
+## License
+This project is licensed under the terms of BSD 3-clause Clear license.
+by downloading this program, you commit to comply with the license as stated in the LICENSE.md file.
